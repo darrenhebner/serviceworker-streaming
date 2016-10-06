@@ -1,28 +1,8 @@
-== README
+{== WIP
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+The is a toy rails app used for experimenting with streaming inside of a serviceworker.
+The idea is that the service worker is able to return the "shell" instantly from cache while still fetching the requested page. This is different from the typical PWA app shell structure.
 
-Things you may want to cover:
+Learn more here: https://jakearchibald.com/2016/streams-ftw/#creating-one-stream-from-multiple-sources-to-supercharge-page-render-times
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+}
