@@ -1,4 +1,4 @@
-const staticCacheName = '14';
+const staticCacheName = '19';
 const expectedCaches = [
   staticCacheName
 ];
@@ -30,7 +30,7 @@ self.addEventListener('activate', event => {
 });
 
 function createPageStream(request) {
-  console.log("makin stream")
+  console.log("makin streams come true")
   const stream = new ReadableStream({
     start(controller) {
       // the body url is the request url plus 'include'
@@ -67,59 +67,15 @@ function createPageStream(request) {
   });
 }
 
-function createArticleStream(request) {
-  console.log("makin stream")
-  const stream = new ReadableStream({
-    start(controller) {
-      // the body url is the request url plus 'include'
-      const url = new URL(request.url + '?shell=true');
-
-      const startFetch = caches.match('/shell-start-article');
-      const endFetch = caches.match('/shell-end');
-      const middleFetch = fetch(url).then(response => {
-        return response;
-      }).catch(err => caches.match('/offline'));
-
-      function pushStream(stream) {
-        const reader = stream.getReader();
-
-        return reader.read().then(function process(result) {
-          if (result.done) return;
-          controller.enqueue(result.value);
-          return reader.read().then(process);
-        });
-      }
-
-      startFetch
-        .then(response => pushStream(response.body))
-        .then(() => middleFetch)
-        .then(response => pushStream(response.body))
-        .then(() => endFetch)
-        .then(response => pushStream(response.body))
-        .then(() => controller.close());
-    }
-  });
-
-  return new Response(stream, {
-    headers: {'Content-Type': 'text/html; charset=utf-8'}
-  });
-}
-
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
 
-  console.log(url)
-
   if (url.origin === location.origin) {
     // home or article
-    if (url.pathname === '/') {
+    if (url.pathname === '/' || /^\/articles\//.test(url.pathname)) {
       event.respondWith(createPageStream(event.request));
       return;
-    } else if (/^\/articles\//.test(url.pathname)) {
-      event.respondWith(createArticleStream(event.request));
-      return;
     }
-
   }
 
   //cache-first for the rest
